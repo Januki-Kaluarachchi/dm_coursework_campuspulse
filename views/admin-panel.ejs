@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - CampusPulse</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+        body { background: #020203; color: #f3f4f6; min-height: 100vh; position: relative; overflow-x: hidden; }
+        
+        /* Admin Panel Load Effect: Circular Iris Opening */
+        .page-transition-iris {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #ffd700;
+            z-index: 9999;
+            pointer-events: none;
+            animation: irisOpen 1s cubic-bezier(0.65, 0, 0.35, 1) forwards;
+        }
+
+        @keyframes irisOpen {
+            0% { clip-path: circle(150% at 50% 50%); opacity: 1; }
+            100% { clip-path: circle(0% at 50% 50%); opacity: 0; }
+        }
+
+        /* Circular Floating Dust */
+        .gold-dust-admin {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 0;
+            background-image: 
+                radial-gradient(circle, #ffd700 1.3px, transparent 1.3px),
+                radial-gradient(circle, #ffaa00 1px, transparent 1px);
+            background-size: 140px 140px, 210px 210px;
+            animation: dustCircularAdmin 30s linear infinite;
+        }
+
+        @keyframes dustCircularAdmin {
+            0% { background-position: 40px 10px, 100px 50px; opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { background-position: 240px 210px, -100px -150px; opacity: 0.6; }
+        }
+
+        nav, .container { position: relative; z-index: 2; }
+        nav { background: rgba(12, 12, 12, 0.9); padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 215, 0, 0.3); }
+        .logo { font-size: 24px; font-weight: 700; color: #ffd700; text-decoration: none; text-shadow: 0 0 12px rgba(255,215,0,0.5); }
+        .nav-links a { color: #d1d5db; text-decoration: none; font-weight: 500; }
+
+        .container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+        .card { background: #111113; border: 1.5px solid rgba(255, 215, 0, 0.3); padding: 30px; border-radius: 16px; margin-bottom: 30px; box-shadow: 0 20px 40px rgba(0,0,0,0.9); }
+        h2 { color: #ffd700; margin-bottom: 15px; font-size: 22px; text-shadow: 0 0 8px rgba(255,215,0,0.3); }
+        form input, form textarea { width: 100%; padding: 12px; background: #0a0a0c; border: 1px solid rgba(255, 215, 0, 0.3); color: white; border-radius: 8px; margin-bottom: 15px; }
+        form input:focus, form textarea:focus { border-color: #ffd700; outline: none; box-shadow: 0 0 12px rgba(255,215,0,0.6); }
+        .btn { padding: 10px 18px; background: linear-gradient(135deg, #ffd700 0%, #aa771c 100%); color: #000; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; box-shadow: 0 0 15px rgba(255,215,0,0.4); }
+        .btn:hover { opacity: 0.95; box-shadow: 0 0 25px rgba(255,215,0,0.7); }
+        .btn-danger { background: #ef4444; color: white; box-shadow: none; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #262626; font-size: 14px; color: #d1d5db; }
+        th { background: #0a0a0c; color: #ffd700; }
+    </style>
+</head>
+<body>
+    <div class="page-transition-iris"></div>
+    <div class="gold-dust-admin"></div>
+
+    <nav>
+        <a href="/" class="logo">✨ CampusPulse - Admin</a>
+        <a href="/" class="nav-links" style="color: #d1d5db;">Home</a>
+    </nav>
+    <div class="container">
+        <div style="margin-bottom: 25px;">
+            <a href="/admin/reports?pass=admin123" class="btn" style="text-decoration: none; display: inline-block;">📊 View System Reports 🚀</a>
+        </div>
+
+        <div class="card">
+            <h2>➕ Add New Event</h2>
+            <form action="/admin/add-event" method="POST">
+                <input type="text" name="title" placeholder="Event Title" required>
+                <textarea name="description" rows="3" placeholder="Event Description" required></textarea>
+                <input type="date" name="event_date" required>
+                <input type="text" name="venue" placeholder="Venue Location" required>
+                <button type="submit" class="btn">Add Event 🚀</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2>📋 Student Registrations</h2>
+            <table>
+                <thead>
+                    <tr><th>Reg ID</th><th>Student Username</th><th>Event Title</th><th>Registration Date</th><th>Action</th></tr>
+                </thead>
+                <tbody>
+                    <% registrations.forEach(reg => { %>
+                        <tr>
+                            <td><%= reg.REG_ID || reg.reg_id %></td>
+                            <td><%= reg.USERNAME || reg.username %></td>
+                            <td><%= reg.TITLE || reg.title %></td>
+                            <td><%= (reg.REG_DATE || reg.reg_date).toISOString().split('T')[0] %></td>
+                            <td>
+                                <form action="/admin/delete-reg/<%= reg.REG_ID || reg.reg_id %>" method="POST" style="display:inline;">
+                                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete 🗑️</button>
+                                </form>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
