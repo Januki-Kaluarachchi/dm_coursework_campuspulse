@@ -9,13 +9,9 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
         body { background: #020203; color: #f3f4f6; min-height: 100vh; position: relative; overflow-x: hidden; }
         
-        /* Admin Panel Load Effect: Circular Iris Opening */
         .page-transition-iris {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: #ffd700;
-            z-index: 9999;
-            pointer-events: none;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #ffd700; z-index: 9999; pointer-events: none;
             animation: irisOpen 1s cubic-bezier(0.65, 0, 0.35, 1) forwards;
         }
 
@@ -24,7 +20,6 @@
             100% { clip-path: circle(0% at 50% 50%); opacity: 0; }
         }
 
-        /* Circular Floating Dust */
         .gold-dust-admin {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; z-index: 0;
@@ -53,7 +48,7 @@
         form input:focus, form textarea:focus { border-color: #ffd700; outline: none; box-shadow: 0 0 12px rgba(255,215,0,0.6); }
         .btn { padding: 10px 18px; background: linear-gradient(135deg, #ffd700 0%, #aa771c 100%); color: #000; border: none; border-radius: 8px; cursor: pointer; font-weight: 700; box-shadow: 0 0 15px rgba(255,215,0,0.4); }
         .btn:hover { opacity: 0.95; box-shadow: 0 0 25px rgba(255,215,0,0.7); }
-        .btn-danger { background: #ef4444; color: white; box-shadow: none; }
+        .btn-danger { background: #ef4444; color: white; box-shadow: none; padding: 6px 12px; font-size: 12px; }
         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
         th, td { padding: 12px; text-align: left; border-bottom: 1px solid #262626; font-size: 14px; color: #d1d5db; }
         th { background: #0a0a0c; color: #ffd700; }
@@ -67,11 +62,13 @@
         <a href="/" class="logo">✨ CampusPulse - Admin</a>
         <a href="/" class="nav-links" style="color: #d1d5db;">Home</a>
     </nav>
+    
     <div class="container">
         <div style="margin-bottom: 25px;">
             <a href="/admin/reports?pass=admin123" class="btn" style="text-decoration: none; display: inline-block;">📊 View System Reports 🚀</a>
         </div>
 
+        <!-- Add New Event Form -->
         <div class="card">
             <h2>➕ Add New Event</h2>
             <form action="/admin/add-event" method="POST">
@@ -79,10 +76,49 @@
                 <textarea name="description" rows="3" placeholder="Event Description" required></textarea>
                 <input type="date" name="event_date" required>
                 <input type="text" name="venue" placeholder="Venue Location" required>
+                <input type="number" name="price" placeholder="Ticket Price (LKR)" required>
                 <button type="submit" class="btn">Add Event 🚀</button>
             </form>
         </div>
 
+        <!-- Active Events Management Table with Delete Option -->
+        <div class="card">
+            <h2>🎉 Active Events Management</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Event ID</th>
+                        <th>Title</th>
+                        <th>Venue</th>
+                        <th>Price (LKR)</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (typeof events !== 'undefined' && events.length > 0) { %>
+                        <% events.forEach(event => { %>
+                            <tr>
+                                <td><%= event.EVENT_ID || event.event_id %></td>
+                                <td><%= event.TITLE || event.title %></td>
+                                <td><%= event.VENUE || event.venue %></td>
+                                <td><%= event.PRICE || event.price %></td>
+                                <td>
+                                    <form action="/admin/delete-event/<%= event.EVENT_ID || event.event_id %>" method="POST" style="display:inline;">
+                                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this event?');">Delete 🗑️</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    <% } else { %>
+                        <tr>
+                            <td colspan="5" style="text-align: center; color: #9ca3af;">No active events found.</td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Student Registrations Table -->
         <div class="card">
             <h2>📋 Student Registrations</h2>
             <table>
@@ -90,19 +126,25 @@
                     <tr><th>Reg ID</th><th>Student Username</th><th>Event Title</th><th>Registration Date</th><th>Action</th></tr>
                 </thead>
                 <tbody>
-                    <% registrations.forEach(reg => { %>
+                    <% if (typeof registrations !== 'undefined' && registrations.length > 0) { %>
+                        <% registrations.forEach(reg => { %>
+                            <tr>
+                                <td><%= reg.REG_ID || reg.reg_id %></td>
+                                <td><%= reg.USERNAME || reg.username %></td>
+                                <td><%= reg.TITLE || reg.title %></td>
+                                <td><%= (reg.REG_DATE || reg.reg_date).toISOString().split('T')[0] %></td>
+                                <td>
+                                    <form action="/admin/delete-reg/<%= reg.REG_ID || reg.reg_id %>" method="POST" style="display:inline;">
+                                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete 🗑️</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    <% } else { %>
                         <tr>
-                            <td><%= reg.REG_ID || reg.reg_id %></td>
-                            <td><%= reg.USERNAME || reg.username %></td>
-                            <td><%= reg.TITLE || reg.title %></td>
-                            <td><%= (reg.REG_DATE || reg.reg_date).toISOString().split('T')[0] %></td>
-                            <td>
-                                <form action="/admin/delete-reg/<%= reg.REG_ID || reg.reg_id %>" method="POST" style="display:inline;">
-                                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure?')">Delete 🗑️</button>
-                                </form>
-                            </td>
+                            <td colspan="5" style="text-align: center; color: #9ca3af;">No student registrations found.</td>
                         </tr>
-                    <% }) %>
+                    <% } %>
                 </tbody>
             </table>
         </div>
