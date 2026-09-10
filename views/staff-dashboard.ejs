@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Dashboard - CampusPulse</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+        body { background: #020203; color: #f3f4f6; min-height: 100vh; padding-bottom: 50px; position: relative; }
+        
+        nav { 
+            background: rgba(12, 12, 12, 0.9); padding: 20px 40px; 
+            display: flex; justify-content: space-between; align-items: center; 
+            border-bottom: 1px solid rgba(255, 215, 0, 0.3); box-shadow: 0 10px 30px rgba(0,0,0,0.8); 
+        }
+        .logo { font-size: 24px; font-weight: 700; color: #ffd700; text-decoration: none; text-shadow: 0 0 12px rgba(255,215,0,0.5); }
+        
+        .container { max-width: 1000px; margin: 40px auto; padding: 0 20px; }
+        .card { 
+            background: #111113; border: 1.5px solid rgba(255, 215, 0, 0.3); 
+            padding: 30px; border-radius: 16px; box-shadow: 0 20px 40px rgba(0,0,0,0.9); 
+        }
+        h2 { color: #ffd700; margin-bottom: 20px; font-size: 22px; text-shadow: 0 0 8px rgba(255,215,0,0.3); }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #262626; font-size: 14px; color: #d1d5db; }
+        th { background: #0a0a0c; color: #ffd700; }
+        
+        .btn-approve { 
+            padding: 8px 16px; background: #10b981; color: white; 
+            border: none; border-radius: 6px; font-weight: 600; cursor: pointer; transition: 0.3s; 
+        }
+        .btn-approve:hover { background: #059669; box-shadow: 0 0 10px rgba(16,185,129,0.5); }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/" class="logo">✨ CampusPulse - Staff</a>
+        <a href="/" style="color: #d1d5db; text-decoration: none; font-weight: 500;">Logout 🚪</a>
+    </nav>
+    <div class="container">
+        <div class="card">
+            <h2>⏳ Pending Student Approvals</h2>
+            <% if (pendingStudents.length === 0) { %>
+                <p style="color: #d1d5db;">No pending student registrations found. All students are approved! 🎉</p>
+            <% } else { %>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Student ID / Username</th>
+                            <th>Full Name</th>
+                            <th>Email</th>
+                            <th>Contact</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% pendingStudents.forEach(student => { %>
+                            <tr>
+                                <td style="color: #ffffff; font-weight: 600;"><%= student.USERNAME || student.username %></td>
+                                <td><%= student.FULL_NAME || student.full_name %></td>
+                                <td><%= student.EMAIL || student.email %></td>
+                                <td><%= student.CONTACT_NUMBER || student.contact_number %></td>
+                                <td>
+                                    <form action="/staff/approve/<%= student.USERNAME || student.username %>" method="POST">
+                                        <button type="submit" class="btn-approve">Approve ✅</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            <% } %>
+        </div>
+    </div>
+</body>
+</html>
