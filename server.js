@@ -1,11 +1,3 @@
-/**
- * ============================================================================
- * Project Name: CampusPulse - Central Online Portal Backend
- * Description: Node.js Express server integrated with Oracle DB (Relational) 
- *              and MongoDB (NoSQL) supporting PL/SQL procedures & reports.
- * ============================================================================
- */
-
 const express = require('express');
 const oracledb = require('oracledb');
 const { MongoClient, ObjectId } = require('mongodb');
@@ -381,10 +373,17 @@ app.get('/staff-login', (req, res) => {
 });
 
 /**
- * 10. Staff Dashboard Route - Displays PENDING student accounts for approval
+ * 10. Staff Dashboard Route - Displays PENDING student accounts for approval (Fixed initial error)
  */
 app.get('/staff', async (req, res) => {
     const pass = req.query.pass;
+
+    // If no password provided initially, load login page without error
+    if (!pass) {
+        return res.render('staff-login', { error: null });
+    }
+
+    // If password is incorrect, show error on login page
     if (pass !== 'staff123') {
         return res.render('staff-login', { error: 'Incorrect Staff Password!' });
     }
