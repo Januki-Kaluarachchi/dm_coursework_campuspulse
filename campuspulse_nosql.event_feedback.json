@@ -1,0 +1,60 @@
+[{
+  "_id": {
+    "$oid": "6a9deaa1186da522a73a4e08"
+  },
+  "oracle_event_id": 1001,
+  "student_id": 101,
+  "rating": 5,
+  "comment": "Great workshop on PL/SQL! Highly informative.",
+  "submitted_at": "2026-09-06"
+},
+{
+  "_id": {
+    "$oid": "6a9e6247186da522a73a4e0a"
+  },
+  "oracle_event_id": 1001,
+  "student_id": "amal123",
+  "rating": 5,
+  "comment": "The Tech Summit was amazing! Learned a lot about software architecture.",
+  "submitted_at": "2026-09-07"
+},
+{
+  "_id": {
+    "$oid": "6a9e6268186da522a73a4e0c"
+  },
+  "oracle_event_id": 1001,
+  "student_id": "student2",
+  "rating": 4,
+  "comment": "Great presentations and very helpful networking session.",
+  "submitted_at": "2026-09-07"
+},
+{
+  "_id": {
+    "$oid": "6a9e6276186da522a73a4e0e"
+  },
+  "oracle_event_id": 1002,
+  "student_id": "student3",
+  "rating": 5,
+  "comment": "Hackathon rules were clear and the lab facilities were top notch!",
+  "submitted_at": "2026-09-07"
+},
+{
+  "_id": {
+    "$oid": "6a9e64851c53dc11c177bf6c"
+  },
+  "oracle_event_id": 7,
+  "student_id": "januki",
+  "rating": 5,
+  "comment": "its soo usefull.",
+  "submitted_at": "2026-09-07"
+},
+{
+  "_id": {
+    "$oid": "6aa1e66f64a91ce772a6a643"
+  },
+  "oracle_event_id": 6,
+  "student_id": "ajith",
+  "rating": 5,
+  "comment": "this is realy nice.",
+  "submitted_at": "2026-09-09"
+}]
