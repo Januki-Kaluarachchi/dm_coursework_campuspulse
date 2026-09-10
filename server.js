@@ -1,3 +1,11 @@
+/**
+ * ============================================================================
+ * Project Name: CampusPulse - Central Online Portal Backend
+ * Description: Node.js Express server integrated with Oracle DB (Relational) 
+ *              and MongoDB (NoSQL) supporting PL/SQL procedures & reports.
+ * ============================================================================
+ */
+
 const express = require('express');
 const oracledb = require('oracledb');
 const { MongoClient, ObjectId } = require('mongodb');
@@ -217,7 +225,7 @@ app.get('/my-registrations', async (req, res) => {
 });
 
 /**
- * 5. Admin Panel Route - Admin authentication & management panel
+ * 5. Admin Panel Route - Admin authentication & management panel (Updated with JOIN for event titles)
  */
 app.get('/admin', async (req, res) => {
     const pass = req.query.pass;
@@ -228,13 +236,27 @@ app.get('/admin', async (req, res) => {
     let connection;
     try {
         connection = await oracledb.getConnection(oracleDbConfig);
+        
         const regsRes = await connection.execute(
-            `SELECT * FROM registrations`,
+            `SELECT r.reg_id, r.username, r.reg_date, e.title 
+             FROM registrations r 
+             JOIN events e ON r.event_id = e.event_id`,
             [],
             { outFormat: oracledb.OUT_FORMAT_OBJECT }
         );
+
+        const eventsRes = await connection.execute(
+            `SELECT * FROM events`,
+            [],
+            { outFormat: oracledb.OUT_FORMAT_OBJECT }
+        );
+
         await connection.close();
-        res.render('admin-panel', { registrations: regsRes.rows });
+        
+        res.render('admin-panel', { 
+            registrations: regsRes.rows,
+            events: eventsRes.rows 
+        });
     } catch (err) {
         if (connection) { try { await connection.close(); } catch (e) {} }
         console.error(err);
@@ -553,5 +575,26 @@ app.post('/discussions/:id/reply', async (req, res) => {
     } catch (err) {
         console.error(err);
         res.status(500).send('Error posting reply');
+    }
+});
+
+/**
+ * 17. Admin Delete Event Route - Deletes an event from the Oracle database by event_id
+ */
+app.post('/admin/delete-event/:id', async (req, res) => {
+    const eventId = req.params.id;
+    let connection;
+    try {
+        connection = await oracledb.getConnection(oracleDbConfig);
+        await connection.execute(
+            `DELETE FROM events WHERE event_id = :eventId`,
+            [eventId]
+        );
+        await connection.close();
+        res.redirect('/admin?pass=admin123');
+    } catch (err) {
+        if (connection) { try { await connection.close(); } catch (e) {} }
+        console.error(err);
+        res.status(500).send('Error deleting event');
     }
 });
