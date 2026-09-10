@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discussion Threads - CampusPulse</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+        body { background: #020203; min-height: 100vh; color: #f3f4f6; padding-bottom: 50px; position: relative; overflow-x: hidden; }
+        
+        /* Discussions Load Effect: Vertical Shimmer Wipe */
+        .page-transition-vert {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(180deg, #ffd700 0%, #020203 100%);
+            z-index: 9999;
+            pointer-events: none;
+            animation: vertTransition 0.8s ease-out forwards;
+        }
+
+        @keyframes vertTransition {
+            0% { transform: translateY(-100%); opacity: 1; }
+            100% { transform: translateY(0); opacity: 0; }
+        }
+
+        /* Wave Floating Dust */
+        .gold-dust-discussions {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 0;
+            background-image: 
+                radial-gradient(circle, #ffd700 1.4px, transparent 1.4px),
+                radial-gradient(circle, #ffb700 1.1px, transparent 1.1px);
+            background-size: 150px 150px, 220px 220px;
+            animation: dustWaveDisc 34s linear infinite;
+        }
+
+        @keyframes dustWaveDisc {
+            0% { background-position: 20px 50px, 90px 30px; opacity: 0.5; }
+            50% { opacity: 1; }
+            100% { background-position: -200px 190px, -120px -180px; opacity: 0.5; }
+        }
+
+        nav, .container { position: relative; z-index: 2; }
+        nav { background: rgba(12, 12, 12, 0.9); padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 215, 0, 0.3); }
+        .logo { font-size: 24px; font-weight: 700; color: #ffd700; text-decoration: none; text-shadow: 0 0 12px rgba(255,215,0,0.5); }
+        .nav-links a { color: #d1d5db; text-decoration: none; font-weight: 500; }
+        .container { max-width: 900px; margin: 40px auto; padding: 0 20px; }
+        .card { background: #111113; border: 1.5px solid rgba(255, 215, 0, 0.3); padding: 30px; border-radius: 16px; margin-bottom: 25px; box-shadow: 0 20px 40px rgba(0,0,0,0.9); }
+        h2 { color: #ffffff; margin-bottom: 15px; font-size: 22px; }
+        .thread-meta { font-size: 13px; color: #ffd700; font-weight: 600; margin-bottom: 15px; }
+        .post-box { background: #0a0a0c; padding: 12px 15px; border-radius: 8px; margin-bottom: 10px; border-left: 4px solid #ffd700; }
+        .post-box p { font-size: 14px; color: #d1d5db; margin-top: 4px; }
+        .post-box small { color: #ffd700; }
+        form input, form textarea, form select { width: 100%; padding: 10px; background: #0a0a0c; border: 1px solid rgba(255, 215, 0, 0.3); color: white; border-radius: 8px; margin-bottom: 10px; font-size: 13px; }
+        .btn { padding: 10px 20px; background: linear-gradient(135deg, #ffd700 0%, #aa771c 100%); color: #000; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; box-shadow: 0 0 15px rgba(255,215,0,0.4); }
+        .btn:hover { opacity: 0.95; box-shadow: 0 0 25px rgba(255,215,0,0.7); }
+    </style>
+</head>
+<body>
+    <div class="page-transition-vert"></div>
+    <div class="gold-dust-discussions"></div>
+
+    <nav>
+        <a href="/" class="logo">✨ CampusPulse - Discussions</a>
+        <div class="nav-links"><a href="/" style="color: #d1d5db;">⬅️ Back to Home</a></div>
+    </nav>
+    <div class="container">
+        <h1 style="margin-bottom: 25px; color: #ffffff; text-shadow: 0 0 10px rgba(255,215,0,0.3);">💬 Student Community Discussions</h1>
+
+        <div class="card" style="border: 1.5px solid #ffd700;">
+            <h2 style="color: #ffd700; margin-bottom: 10px;">➕ Start a New Discussion Thread</h2>
+            <form action="/discussions/add" method="POST" style="display: grid; gap: 10px;">
+                <input type="text" name="title" placeholder="Discussion Topic / Title" required>
+                <select name="eventId" required>
+                    <option value="">Select Related Event</option>
+                    <% eventsList.forEach(ev => { %>
+                        <option value="<%= ev.EVENT_ID || ev.event_id %>"><%= ev.TITLE || ev.title %></option>
+                    <% }) %>
+                </select>
+                <input type="text" name="studentId" placeholder="Your Student ID (e.g. amal123)" required>
+                <textarea name="initialComment" rows="2" placeholder="Write your question..." required></textarea>
+                <button type="submit" class="btn">Create Thread 🚀</button>
+            </form>
+        </div>
+
+        <% if (threads.length === 0) { %>
+            <div class="card"><p style="color: #d1d5db;">No discussion threads found.</p></div>
+        <% } else { %>
+            <% threads.forEach(thread => { %>
+                <div class="card">
+                    <h2><%= thread.title %></h2>
+                    <div class="thread-meta">
+                        📌 Event: <%= eventsMap[thread.oracle_event_id] || ('Event ID: ' + thread.oracle_event_id) %> | 👤 Author ID: <%= thread.author_student_id %>
+                    </div>
+                    <h4 style="margin-bottom: 10px; color: #ffffff; font-size: 15px;">Replies & Posts:</h4>
+                    <% if (thread.posts && thread.posts.length > 0) { %>
+                        <div style="margin-bottom: 20px;">
+                            <% thread.posts.forEach(post => { %>
+                                <div class="post-box">
+                                    <strong style="color: white;">Student ID: <%= post.student_id %></strong>
+                                    <p><%= post.comment %></p>
+                                    <small>📅 <%= post.date %></small>
+                                </div>
+                            <% }) %>
+                        </div>
+                    <% } else { %>
+                        <p style="color: #d1d5db; font-size: 13px; margin-bottom: 15px;">No replies yet.</p>
+                    <% } %>
+                    <form action="/discussions/<%= thread._id %>/reply" method="POST">
+                        <input type="text" name="studentId" placeholder="Your Student ID (e.g. amal123)" required>
+                        <textarea name="replyComment" rows="2" placeholder="Write your reply..." required></textarea>
+                        <button type="submit" class="btn">Reply 🚀</button>
+                    </form>
+                </div>
+            <% }) %>
+        <% } %>
+    </div>
+</body>
+</html>
