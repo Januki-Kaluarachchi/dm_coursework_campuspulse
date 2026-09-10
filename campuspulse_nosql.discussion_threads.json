@@ -1,0 +1,20 @@
+[{
+  "_id": {
+    "$oid": "6a9e68c4e9b886ae9d66d07a"
+  },
+  "oracle_event_id": 7,
+  "title": "can i bring my phone ?",
+  "author_student_id": "januki",
+  "posts": [
+    {
+      "student_id": "januki",
+      "comment": "can i bring my phone ?",
+      "date": "2026-09-07"
+    },
+    {
+      "student_id": "staff",
+      "comment": "yes , you can.",
+      "date": "2026-09-09"
+    }
+  ]
+}]
