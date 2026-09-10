@@ -7,8 +7,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
-        body { background: #020203; color: #f3f4f6; min-height: 100vh; display: flex; justify-content: center; align-items: center; position: relative; overflow: hidden; }
+        body { 
+            background: #020203; 
+            color: #f3f4f6; 
+            min-height: 100vh; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            position: relative; 
+            overflow: hidden; 
+        }
         
+        /* Smooth Entrance Animation */
         .card { 
             background: #111113; 
             border: 1.5px solid rgba(255, 215, 0, 0.4); 
@@ -18,32 +28,63 @@
             text-align: center; 
             box-shadow: 0 20px 40px rgba(0,0,0,0.9); 
             position: relative; z-index: 2; 
+            animation: slideUp 0.8s ease-out forwards;
         }
+
+        @keyframes slideUp {
+            0% {
+                opacity: 0;
+                transform: translateY(40px) scale(0.95);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
         h2 { color: #ffd700; margin-bottom: 20px; font-size: 24px; text-shadow: 0 0 8px rgba(255,215,0,0.3); }
+        
         input { 
             width: 100%; padding: 13px; background: #0a0a0c; 
             border: 1px solid rgba(255, 215, 0, 0.3); color: white; 
             border-radius: 8px; margin-bottom: 15px; text-align: center; font-size: 14px; 
         }
         input:focus { border-color: #ffd700; outline: none; box-shadow: 0 0 12px rgba(255,215,0,0.6); }
+        
         .btn { 
             width: 100%; padding: 12px; background: linear-gradient(135deg, #ffd700 0%, #aa771c 100%); 
             color: #000; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; font-size: 14px; 
             box-shadow: 0 0 15px rgba(255,215,0,0.4); transition: 0.3s; 
         }
         .btn:hover { opacity: 0.95; box-shadow: 0 0 25px rgba(255,215,0,0.7); }
+        
         .back-link { display: inline-block; margin-top: 15px; color: #9ca3af; text-decoration: none; font-size: 13px; transition: 0.3s; }
         .back-link:hover { color: #ffd700; }
-        .error { background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 1px solid #ef4444; padding: 10px; border-radius: 6px; margin-bottom: 15px; font-size: 13px; }
+        
+        .error { 
+            background: rgba(239, 68, 68, 0.2); color: #fca5a5; 
+            border: 1px solid #ef4444; padding: 10px; border-radius: 6px; 
+            margin-bottom: 15px; font-size: 13px; 
+            animation: shake 0.4s ease-in-out;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
+        }
     </style>
 </head>
 <body>
     <div class="card">
         <h2>👨‍🏫 Staff Portal</h2>
-        <% if (error) { %>
+        
+        <!-- Safely check if error exists and is not empty -->
+        <% if (typeof error !== 'undefined' && error) { %>
             <div class="error"><%= error %></div>
         <% } %>
-        <form action="/staff" method="GET">
+        
+        <form action="/staff" method="POST">
             <input type="password" name="pass" placeholder="Enter Staff Password" required autofocus>
             <button type="submit" class="btn">Login 🚀</button>
         </form>
