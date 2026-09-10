@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusPulse - Executive Management Reports</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+        
+        body { 
+            background: #020203; 
+            min-height: 100vh; 
+            color: #f3f4f6; 
+            position: relative;
+            overflow-x: hidden;
+            padding: 30px;
+        }
+
+        /* Page Load Effect: Center Gold Drop Expand */
+        .page-transition-drop {
+            position: fixed;
+            top: 50%; left: 50%;
+            width: 10px; height: 10px;
+            background: #ffd700;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 30px #ffd700;
+            z-index: 9999;
+            pointer-events: none;
+            animation: homeDropExpand 1.2s cubic-bezier(0.15, 0.85, 0.35, 1) forwards;
+        }
+
+        @keyframes homeDropExpand {
+            0% { width: 10px; height: 10px; opacity: 1; }
+            100% { width: 300vw; height: 300vw; opacity: 0; background: radial-gradient(circle, rgba(255,215,0,0.4) 0%, transparent 70%); }
+        }
+
+        /* Ongoing Gold Dust Background Animation */
+        .gold-dust-home {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            background-image: 
+                radial-gradient(circle, #ffd700 1.3px, transparent 1.3px),
+                radial-gradient(circle, #ffaa00 1px, transparent 1px);
+            background-size: 160px 160px, 220px 220px;
+            animation: dustDriftHome 28s linear infinite;
+        }
+
+        @keyframes dustDriftHome {
+            0% { background-position: 0 0, 50px 70px; opacity: 0.5; }
+            50% { opacity: 0.9; }
+            100% { background-position: 200px 300px, 270px 370px; opacity: 0.5; }
+        }
+
+        .container { max-width: 1300px; margin: 0 auto; position: relative; z-index: 2; }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #111113;
+            border: 1.5px solid rgba(255, 215, 0, 0.4);
+            padding: 20px 30px;
+            border-radius: 16px;
+            margin-bottom: 35px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.8);
+        }
+        h1 { 
+            color: #ffd700; 
+            margin: 0; 
+            font-size: 26px; 
+            text-shadow: 0 0 15px rgba(255,215,0,0.5);
+        }
+        .btn-back {
+            background: linear-gradient(135deg, #ffd700 0%, #aa771c 100%);
+            color: #000;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            box-shadow: 0 0 15px rgba(255,215,0,0.4);
+            transition: all 0.3s ease;
+        }
+        .btn-back:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 25px rgba(255,215,0,0.7);
+        }
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+            margin-bottom: 35px;
+        }
+        .card {
+            background: #111113;
+            border: 1.5px solid rgba(255, 215, 0, 0.4);
+            padding: 25px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.9);
+            position: relative;
+            overflow: hidden;
+            transition: 0.3s;
+        }
+        .card:hover { border-color: #ffd700; box-shadow: 0 0 25px rgba(255,215,0,0.3); }
+        .card h3 { color: #ffd700; margin-top: 0; font-size: 16px; letter-spacing: 0.5px; text-shadow: 0 0 5px rgba(255,215,0,0.3); }
+        .card p { font-size: 32px; font-weight: 800; margin: 10px 0 0 0; color: #38bdf8; text-shadow: 0 0 15px rgba(56, 189, 248, 0.4); }
+        
+        .report-section {
+            background: #111113;
+            border: 1.5px solid rgba(255, 215, 0, 0.3);
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 35px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.9);
+        }
+        .report-section h2 {
+            color: #ffd700;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+            padding-bottom: 15px;
+            margin-top: 0;
+            font-size: 18px;
+            letter-spacing: 0.5px;
+            text-shadow: 0 0 5px rgba(255,215,0,0.3);
+        }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid rgba(255, 215, 0, 0.1); font-size: 14px; }
+        th { background-color: #0a0a0c; color: #ffd700; font-weight: 600; }
+        tr:hover { background-color: rgba(255, 215, 0, 0.05); }
+        
+        /* Top #1 Highlight styling */
+        .top-rank-1 {
+            background: rgba(255, 215, 0, 0.15) !important;
+            border-left: 4px solid #ffd700;
+            font-weight: bold;
+        }
+        .badge-top {
+            background: linear-gradient(135deg, #ffd700 0%, #aa771c 100%);
+            color: #000;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: bold;
+            margin-left: 8px;
+            box-shadow: 0 0 10px rgba(255,215,0,0.5);
+        }
+        .no-data { text-align: center; color: #9ca3af; padding: 25px; font-style: italic; }
+    </style>
+</head>
+<body>
+    <div class="page-transition-drop"></div>
+    <div class="gold-dust-home"></div>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>📊 Executive Management Reports Dashboard</h1>
+            <a href="/admin?pass=admin123" class="btn-back">⬅ Back to Admin Panel</a>
+        </div>
+
+        <!-- Executive Summary Cards -->
+        <div class="analytics-grid">
+            <div class="card">
+                <h3>💰 Total Revenue Generated from Ticket Sales</h3>
+                <p>LKR <%= totalRevenue %> /=</p>
+            </div>
+            <div class="card">
+                <h3>⭐ Featured Event Participation Volume</h3>
+                <p><%= plsqlEvent1Count %> Registrations</p>
+            </div>
+        </div>
+
+        <!-- Report 1: Student Registrations Audit Trail -->
+        <div class="report-section">
+            <h2>📝 Report 1: Comprehensive Student Registrations Audit Trail</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Reg ID</th>
+                        <th>Student Name</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Registered Event</th>
+                        <th>Registration Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (report1 && report1.length > 0) { %>
+                        <% report1.forEach(r => { %>
+                            <tr>
+                                <td><%= r.REG_ID || r.reg_id %></td>
+                                <td><%= r.FULL_NAME || r.full_name %></td>
+                                <td><%= r.USERNAME || r.username %></td>
+                                <td><%= r.EMAIL || r.email %></td>
+                                <td><%= r.TITLE || r.title %></td>
+                                <td><%= r.REG_DATE ? new Date(r.REG_DATE || r.reg_date).toISOString().split('T')[0] : '' %></td>
+                            </tr>
+                        <% }) %>
+                    <% } else { %>
+                        <tr><td colspan="6" class="no-data">No registration records found.</td></tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Report 2: Popular Events Ranking (Top #1 Highlighted & Top 5) -->
+        <div class="report-section">
+            <h2>📈 Report 2: University Events Popularity Ranking (Top Events Analytics)</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Ranking</th>
+                        <th>Event Title</th>
+                        <th>Total Registration Volume</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (report2 && report2.length > 0) { %>
+                        <% 
+                           const sortedEvents = [...report2].sort((a, b) => (b.TOTAL_REGS || b.total_regs || 0) - (a.TOTAL_REGS || a.total_regs || 0));
+                           sortedEvents.slice(0, 5).forEach((r, index) => { 
+                               let isTop1 = (index === 0);
+                        %>
+                            <tr class="<%= isTop1 ? 'top-rank-1' : '' %>">
+                                <td>
+                                    #<%= index + 1 %> 
+                                    <% if (isTop1) { %>
+                                        <span class="badge-top">TOP #1 POPULAR</span>
+                                    <% } %>
+                                </td>
+                                <td><%= r.TITLE || r.title %></td>
+                                <td><%= r.TOTAL_REGS || r.total_regs || 0 %> Students</td>
+                            </tr>
+                        <% }) %>
+                    <% } else { %>
+                        <tr><td colspan="2" class="no-data">No summary analytics available.</td></tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Report 3: Active Event Schedules & Pricing -->
+        <div class="report-section">
+            <h2>📅 Report 3: Active Events & Venue Schedule Directory</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Event Title</th>
+                        <th>Description</th>
+                        <th>Date</th>
+                        <th>Venue</th>
+                        <th>Ticket Fee (LKR)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (report3 && report3.length > 0) { %>
+                        <% report3.forEach(e => { %>
+                            <tr>
+                                <td><%= e.EVENT_ID || e.event_id %></td>
+                                <td><%= e.TITLE || e.title %></td>
+                                <td><%= e.DESCRIPTION || e.description %></td>
+                                <td><%= e.EVENT_DATE ? new Date(e.EVENT_DATE || e.event_date).toISOString().split('T')[0] : '' %></td>
+                                <td><%= e.VENUE || e.venue %></td>
+                                <td>LKR <%= e.PRICE || e.price || 0 %> /=</td>
+                            </tr>
+                        <% }) %>
+                    <% } else { %>
+                        <tr><td colspan="6" class="no-data">No active events scheduled.</td></tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Report 4: Student Community Feedback -->
+        <div class="report-section">
+            <h2>💬 Report 4: Student Feedback & Satisfaction Summary</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Event ID</th>
+                        <th>Student ID</th>
+                        <th>Rating</th>
+                        <th>Comments & Reviews</th>
+                        <th>Submission Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (report4 && report4.length > 0) { %>
+                        <% report4.forEach(f => { %>
+                            <tr>
+                                <td><%= f.oracle_event_id %></td>
+                                <td><%= f.student_id %></td>
+                                <td>⭐ <%= f.rating %>/5</td>
+                                <td><%= f.comment %></td>
+                                <td><%= f.submitted_at %></td>
+                            </tr>
+                        <% }) %>
+                    <% } else { %>
+                        <tr><td colspan="5" class="no-data">No community feedback recorded.</td></tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Report 5: Campus Discussion Forums -->
+        <div class="report-section">
+            <h2>💬 Report 5: Campus Discussion Forums & Q&A Overview</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Discussion Topic</th>
+                        <th>Event ID</th>
+                        <th>Author</th>
+                        <th>Interaction Count</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if (report5 && report5.length > 0) { %>
+                        <% report5.forEach(d => { %>
+                            <tr>
+                                <td><%= d.title %></td>
+                                <td><%= d.oracle_event_id %></td>
+                                <td><%= d.author_student_id %></td>
+                                <td><%= d.posts ? d.posts.length : 0 %> Posts</td>
+                            </tr>
+                        <% }) %>
+                    <% } else { %>
+                        <tr><td colspan="4" class="no-data">No active discussion threads found.</td></tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</body>
+</html>
