@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Registrations - CampusPulse</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+        body { 
+            background: #020203; 
+            min-height: 100vh; 
+            color: #f3f4f6; 
+            position: relative;
+            overflow-x: hidden;
+            padding-bottom: 50px;
+        }
+
+        /* My Registrations Load Effect: Diagonal Wipe Transition */
+        .page-transition-wipe {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, #ffd700 0%, #aa771c 50%, #020203 100%);
+            z-index: 9999;
+            pointer-events: none;
+            animation: wipeTransition 0.9s cubic-bezier(0.77, 0, 0.175, 1) forwards;
+        }
+
+        @keyframes wipeTransition {
+            0% { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); opacity: 1; }
+            100% { clip-path: polygon(0 0, 100% 0, 100% 0, 0 0); opacity: 0; }
+        }
+
+        /* Diagonal Floating Dust */
+        .gold-dust-reg {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            background-image: 
+                radial-gradient(circle, #ffd700 1.4px, transparent 1.4px),
+                radial-gradient(circle, #ffaa00 1.1px, transparent 1.1px);
+            background-size: 180px 180px, 120px 120px;
+            animation: dustDiagonalReg 32s linear infinite;
+        }
+
+        @keyframes dustDiagonalReg {
+            0% { background-position: 10px 20px, 80px 40px; opacity: 0.5; }
+            50% { opacity: 0.9; }
+            100% { background-position: -180px -180px, -120px -120px; opacity: 0.5; }
+        }
+
+        nav, .container { position: relative; z-index: 2; }
+        nav { 
+            background: rgba(12, 12, 12, 0.9); 
+            padding: 20px 40px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 1px solid rgba(255, 215, 0, 0.3);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+        .logo { font-size: 24px; font-weight: 700; color: #ffd700; text-decoration: none; text-shadow: 0 0 12px rgba(255,215,0,0.5); }
+        .nav-links a { color: #d1d5db; text-decoration: none; font-weight: 500; transition: 0.3s; }
+        .nav-links a:hover { color: #ffd700; }
+
+        .container { max-width: 900px; margin: 40px auto; padding: 0 20px; }
+        .card { 
+            background: #111113; 
+            border: 1.5px solid rgba(255, 215, 0, 0.3);
+            padding: 30px; 
+            border-radius: 16px; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.9); 
+            margin-bottom: 25px; 
+        }
+        h2 { color: #ffd700; margin-bottom: 15px; font-size: 22px; text-shadow: 0 0 8px rgba(255,215,0,0.3); }
+        input { width: 100%; padding: 12px; background: #0a0a0c; border: 1px solid rgba(255, 215, 0, 0.3); color: white; border-radius: 8px; margin-bottom: 12px; font-size: 14px; }
+        input:focus { border-color: #ffd700; outline: none; box-shadow: 0 0 12px rgba(255,215,0,0.6); }
+        .btn { padding: 10px 20px; background: linear-gradient(135deg, #ffd700 0%, #aa771c 100%); color: #000; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; box-shadow: 0 0 15px rgba(255,215,0,0.4); }
+        .btn:hover { opacity: 0.95; box-shadow: 0 0 25px rgba(255,215,0,0.7); }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid #262626; font-size: 14px; color: #d1d5db; }
+        th { background: #0a0a0c; color: #ffd700; }
+    </style>
+</head>
+<body>
+    <div class="page-transition-wipe"></div>
+    <div class="gold-dust-reg"></div>
+
+    <nav>
+        <a href="/" class="logo">✨ CampusPulse</a>
+        <div class="nav-links"><a href="/">⬅️ Back to Home</a></div>
+    </nav>
+
+    <div class="container">
+        <div class="card">
+            <h2>🔍 Search My Registrations</h2>
+            <form action="/my-registrations" method="GET">
+                <input type="text" name="username" placeholder="Enter your Student ID (e.g. amal123)" value="<%= typeof username !== 'undefined' ? username : '' %>" required>
+                <button type="submit" class="btn">Search Registrations 🚀</button>
+            </form>
+        </div>
+
+        <% if (typeof studentInfo !== 'undefined' && studentInfo) { %>
+            <div class="card">
+                <h2>👤 Student Profile Information</h2>
+                <p style="color: #ffd700; margin-bottom: 8px;"><strong>Full Name:</strong> <%= studentInfo.FULL_NAME || studentInfo.full_name %></p>
+                <p style="color: #d1d5db; margin-bottom: 8px;"><strong>Student ID:</strong> <%= studentInfo.USERNAME || studentInfo.username %></p>
+                <p style="color: #d1d5db; margin-bottom: 8px;"><strong>Contact:</strong> <%= studentInfo.CONTACT_NUMBER || studentInfo.contact_number %></p>
+                <p style="color: #d1d5db;"><strong>Email:</strong> <%= studentInfo.EMAIL || studentInfo.email %></p>
+            </div>
+        <% } %>
+
+        <% if (typeof myEvents !== 'undefined') { %>
+            <div class="card">
+                <h2>📋 Registered Events List</h2>
+                <% if (myEvents.length === 0) { %>
+                    <p style="color: #d1d5db;">No event registrations found for this Student ID.</p>
+                <% } else { %>
+                    <table>
+                        <thead>
+                            <tr><th>Event Title</th><th>Description</th><th>Date</th><th>Venue</th><th>Registered On</th></tr>
+                        </thead>
+                        <tbody>
+                            <% myEvents.forEach(ev => { %>
+                                <tr>
+                                    <td style="color: #ffffff; font-weight: 600;"><%= ev.TITLE || ev.title %></td>
+                                    <td><%= ev.DESCRIPTION || ev.description %></td>
+                                    <td><%= (ev.EVENT_DATE || ev.event_date).toISOString().split('T')[0] %></td>
+                                    <td><%= ev.VENUE || ev.venue %></td>
+                                    <td><%= (ev.REG_DATE || ev.reg_date).toISOString().split('T')[0] %></td>
+                                </tr>
+                            <% }) %>
+                        </tbody>
+                    </table>
+                <% } %>
+            </div>
+        <% } %>
+    </div>
+</body>
+</html>
