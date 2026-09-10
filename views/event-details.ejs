@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CampusPulse - Event Details</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Poppins', sans-serif; }
+        
+        body { 
+            background: #020203; 
+            min-height: 100vh; 
+            color: #f3f4f6; 
+            position: relative;
+            overflow-x: hidden;
+            padding: 30px;
+        }
+
+        /* Page Load Effect: Center Gold Drop Expand */
+        .page-transition-drop {
+            position: fixed;
+            top: 50%; left: 50%;
+            width: 10px; height: 10px;
+            background: #ffd700;
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 30px #ffd700;
+            z-index: 9999;
+            pointer-events: none;
+            animation: homeDropExpand 1.2s cubic-bezier(0.15, 0.85, 0.35, 1) forwards;
+        }
+
+        @keyframes homeDropExpand {
+            0% { width: 10px; height: 10px; opacity: 1; }
+            100% { width: 300vw; height: 300vw; opacity: 0; background: radial-gradient(circle, rgba(255,215,0,0.4) 0%, transparent 70%); }
+        }
+
+        /* Ongoing Gold Dust Background Animation */
+        .gold-dust-home {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            background-image: 
+                radial-gradient(circle, #ffd700 1.3px, transparent 1.3px),
+                radial-gradient(circle, #ffaa00 1px, transparent 1px);
+            background-size: 160px 160px, 220px 220px;
+            animation: dustDriftHome 28s linear infinite;
+        }
+
+        @keyframes dustDriftHome {
+            0% { background-position: 0 0, 50px 70px; opacity: 0.5; }
+            50% { opacity: 0.9; }
+            100% { background-position: 200px 300px, 270px 370px; opacity: 0.5; }
+        }
+
+        .container { max-width: 900px; margin: 0 auto; position: relative; z-index: 2; }
+        
+        .btn-back {
+            display: inline-block;
+            background: linear-gradient(135deg, #ffd700 0%, #aa771c 100%);
+            color: #000;
+            padding: 10px 22px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            margin-bottom: 25px;
+            box-shadow: 0 0 15px rgba(255,215,0,0.4);
+            transition: 0.3s;
+        }
+        .btn-back:hover { opacity: 0.95; box-shadow: 0 0 25px rgba(255,215,0,0.7); transform: translateY(-2px); }
+
+        .card {
+            background: #111113;
+            border: 1.5px solid rgba(255, 215, 0, 0.3);
+            padding: 35px;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.9);
+            margin-bottom: 30px;
+            transition: 0.3s ease;
+        }
+        .card:hover { border-color: #ffd700; box-shadow: 0 0 25px rgba(255,215,0,0.25); }
+        
+        h1 { color: #ffd700; margin-bottom: 10px; font-size: 28px; text-shadow: 0 0 10px rgba(255,215,0,0.4); }
+        h2 { color: #ffd700; margin-bottom: 20px; font-size: 22px; }
+
+        .event-meta {
+            background: #0a0a0c;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.8);
+        }
+        .event-meta p { color: #d1d5db; font-size: 14px; margin: 0; }
+        .price-highlight {
+            grid-column: span 2;
+            color: #38bdf8 !important;
+            font-weight: 700;
+            font-size: 16px;
+            text-shadow: 0 0 10px rgba(56,189,248,0.4);
+        }
+
+        form input, form textarea {
+            width: 100%;
+            padding: 14px;
+            margin-bottom: 15px;
+            background: #0a0a0c;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            color: white;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        form input:focus, form textarea:focus {
+            border-color: #ffd700;
+            outline: none;
+            box-shadow: 0 0 12px rgba(255,215,0,0.6);
+        }
+
+        form button {
+            background: linear-gradient(135deg, #ffd700 0%, #aa771c 100%);
+            color: #000;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(255,215,0,0.4);
+            transition: 0.3s;
+        }
+        form button:hover { opacity: 0.95; box-shadow: 0 0 25px rgba(255,215,0,0.7); }
+
+        .feedback-item {
+            background: #0a0a0c;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            padding: 18px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            border-left: 4px solid #ffd700;
+        }
+    </style>
+</head>
+<body>
+    <div class="page-transition-drop"></div>
+    <div class="gold-dust-home"></div>
+
+    <div class="container">
+        <a href="/" class="btn-back">⬅ Back to Home</a>
+
+        <div class="card">
+            <h1><%= event.TITLE || event.title %></h1>
+            <p style="color: #d1d5db; font-size: 15px; line-height: 1.6;"><%= event.DESCRIPTION || event.description %></p>
+
+            <div class="event-meta">
+                <p>📅 <strong>Date:</strong> <%= event.EVENT_DATE ? new Date(event.EVENT_DATE || event.event_date).toISOString().split('T')[0] : '' %></p>
+                <p>📍 <strong>Venue:</strong> <%= event.VENUE || event.venue %></p>
+                <p class="price-highlight">💰 Ticket Fee: LKR <%= event.PRICE || event.price || 0 %> /=</p>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>💬 Student Feedback & Reviews</h2>
+            
+            <form action="/event/<%= event.EVENT_ID || event.event_id %>/feedback" method="POST">
+                <input type="text" name="studentName" placeholder="Your Student ID / Name" required>
+                <textarea name="comment" rows="4" placeholder="Write your review or feedback about this event..." required></textarea>
+                <button type="submit">Submit Feedback ⭐</button>
+            </form>
+
+            <div style="margin-top: 35px;">
+                <h3 style="color: #ffd700; font-size: 18px; margin-bottom: 15px;">Recent Reviews</h3>
+                <% if (feedbacks && feedbacks.length > 0) { %>
+                    <% feedbacks.forEach(fb => { %>
+                        <div class="feedback-item">
+                            <p style="margin: 0 0 5px 0; font-weight: 700; color: #ffd700;"><%= fb.student_id %> <span style="color: #9ca3af; font-weight: normal; font-size: 12px;">(<%= fb.submitted_at %>)</span></p>
+                            <p style="margin: 0; color: #d1d5db; font-size: 14px;"><%= fb.comment %></p>
+                        </div>
+                    <% }) %>
+                <% } else { %>
+                    <p style="color: #9ca3af; font-style: italic;">No reviews yet. Be the first to share your feedback!</p>
+                <% } %>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
