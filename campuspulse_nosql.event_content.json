@@ -1,0 +1,30 @@
+[{
+  "_id": {
+    "$oid": "6a978c1a186da522a73a4df6"
+  },
+  "oracle_event_id": 1001,
+  "agendas": [
+    {
+      "time": "09:00 AM",
+      "topic": "PHP Fundamentals & PDO setup",
+      "speaker": "Dr. Perera"
+    },
+    {
+      "time": "11:00 AM",
+      "topic": "Oracle PL/SQL Procedures & Triggers",
+      "speaker": "Eng. Silva"
+    }
+  ],
+  "speaker_bios": [
+    {
+      "name": "Dr. Perera",
+      "title": "Senior Lecturer",
+      "bio": "Expert in Software Engineering."
+    },
+    {
+      "name": "Eng. Silva",
+      "title": "Database Administrator",
+      "bio": "Oracle Certified Professional."
+    }
+  ]
+}]
